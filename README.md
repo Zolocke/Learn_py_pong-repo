@@ -1,2 +1,3 @@
 # Learn_py-repo
- Learn python games
+ Create a pong-style game
+ 
