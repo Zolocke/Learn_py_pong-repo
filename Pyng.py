@@ -29,15 +29,26 @@ ball_speed = [5 * random.choice([1, -1]), 5 * random.choice([1, -1])]
 # Create clock object to control frame rate
 clock = pygame.time.Clock()
 
+# Reset everything
+def reset_game():
+    player1_paddle.y = HEIGHT // 2 - PADDLE_HEIGHT // 2
+    player2_paddle.y = HEIGHT // 2 - PADDLE_HEIGHT // 2
+    ball.x = WIDTH // 2 - BALL_SIZE // 2
+    ball.y = HEIGHT // 2 - BALL_SIZE // 2
+
 # Game loop
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_r]:
+        reset_game()
+        running = True # Start game again
     
     # Move paddles
-    keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and player1_paddle.top > 0:
         player1_paddle.y -= 5
     if keys[pygame.K_s] and player1_paddle.bottom < HEIGHT:
@@ -46,7 +57,7 @@ while running:
         player2_paddle.y -= 5
     if keys[pygame.K_DOWN] and player2_paddle.bottom < HEIGHT:
         player2_paddle.y += 5
-
+    
     # Move ball
     ball.x += ball_speed[0]
     ball.y += ball_speed[1]
@@ -66,10 +77,14 @@ while running:
     pygame.draw.ellipse(screen, WHITE, ball)
     
     # Update the display
+    if not running:
+        screen.blit(restart_text, restart_text_rect)
+    
     pygame.display.flip()
     
     # Limit the frame rate
     clock.tick(FPS)
+
 
 # Clean up
 pygame.quit()
